@@ -1,0 +1,20 @@
+{
+  "name": "alpine-node-hello",
+  "version": "1.0.0",
+  "description": "A simple Express Hello World example using Docker and Alpine Linux. Great for quick Docker testing, builds, etc.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdxmholmes/alpine-node-hello.git"
+  },
+  "author": "Matt Holmes",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/pdxmholmes/alpine-node-hello/issues"
+  },
+  "homepage": "https://github.com/pdxmholmes/alpine-node-hello#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "humanize": "0.0.9"
+  }
+}
