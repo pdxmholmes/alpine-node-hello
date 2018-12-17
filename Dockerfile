@@ -1,11 +1,11 @@
-FROM mhart/alpine-node:6
+FROM node:10-alpine
 
-WORKDIR /service
+WORKDIR /var/service
 
-ADD package.json /service
-RUN [ "npm", "install" ]
+ADD package.json /var/service
+RUN [ "npm", "install", "--production" ]
 
-ADD index.js /service
+ADD dist/index.js /var/service
 
 EXPOSE 5000
-ENTRYPOINT [ "node", "/service/index.js" ]
+ENTRYPOINT [ "node", "/var/service/index.js" ]

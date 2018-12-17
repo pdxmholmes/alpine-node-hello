@@ -1,11 +1,16 @@
 {
   "name": "alpine-node-hello",
-  "version": "1.0.0",
-  "description": "A simple Express Hello World example using Docker and Alpine Linux. Great for quick Docker testing, builds, etc.",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "A simple Hapi Hello World REST API example using Docker and Node Alpine. Great for quick Docker testing, builds, etc.",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pdxmholmes/alpine-node-hello.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "start": "node dist/index.js"
   },
   "author": "Matt Holmes",
   "license": "BSD-3-Clause",
@@ -14,7 +19,22 @@
   },
   "homepage": "https://github.com/pdxmholmes/alpine-node-hello#readme",
   "dependencies": {
-    "express": "^4.14.0",
-    "humanize": "0.0.9"
+    "boom": "^7.3.0",
+    "good": "^8.1.1",
+    "good-console": "^7.1.0",
+    "good-squeeze": "^5.1.0",
+    "hapi": "^17.8.1",
+    "humanize": "0.0.9",
+    "joi": "^14.3.0"
+  },
+  "devDependencies": {
+    "@types/boom": "^7.2.1",
+    "@types/hapi": "^17.8.1",
+    "@types/joi": "^14.0.1",
+    "prettier": "^1.15.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.2.2"
   }
 }
