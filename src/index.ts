@@ -4,6 +4,12 @@ import Joi from 'joi';
 import Boom from 'boom';
 import good from 'good';
 import humanize from 'humanize';
+import httpStatus from 'http-status-codes';
+import {isNumber} from 'lodash';
+
+const allStatusCodes = Object.keys(httpStatus)
+  .map(code => httpStatus[code])
+  .filter(isNumber);
 
 const port = process.env.PORT || 5000;
 
@@ -28,7 +34,8 @@ async function start() {
               {
                 log: '*',
                 response: {
-                  include: '*'
+                  include: 'api',
+                  exclude: 'health'
                 }
               }
             ]
@@ -58,6 +65,7 @@ async function start() {
     path: '/',
     options: {
       description: 'Basic default route that returns a JSON object',
+      tags: ['api'],
       handler: () => ({
         host: os.hostname(),
         at: new Date().toUTCString()
@@ -70,6 +78,7 @@ async function start() {
     path: '/details',
     options: {
       description: 'Details route that returns details of the host',
+      tags: ['api'],
       handler: () => ({
         hostname: os.hostname(),
         arch: os.arch(),
@@ -86,19 +95,27 @@ async function start() {
     path: '/status/{code}',
     options: {
       description: 'Route which echos back the status code as an error object',
+      tags: ['api'],
       validate: {
         params: {
           code: Joi.number()
             .integer()
             .positive()
             .required()
+            .allow(allStatusCodes)
         }
       },
-      handler: (req: Hapi.Request) => {
+      handler: (req: Hapi.Request, h: Hapi.ResponseToolkit) => {
         const statusCode = parseInt(req.params.code);
-        return Boom.boomify(new Error(`Forced status code: ${statusCode}`), {
-          statusCode
-        });
+        if (statusCode >= 400) {
+          return Boom.boomify(new Error(`Forced status code: ${statusCode}`), {
+            statusCode
+          });
+        }
+
+        return h
+          .response({statusCode, message: httpStatus.getStatusText(statusCode)})
+          .code(statusCode);
       }
     }
   });
@@ -108,14 +125,36 @@ async function start() {
     path: '/status',
     options: {
       description: 'Simple status route that returns a 200 (OK)',
+      tags: ['api', 'health'],
       handler: () => ({
         status: 'ok'
       })
     }
   });
 
+  server.route({
+    method: ['PUT', 'POST'],
+    path: '/echo',
+    options: {
+      description: 'Echos back the JSON payload sent to the handler',
+      tags: ['api'],
+      payload: {
+        parse: true
+      },
+      handler: (req: Hapi.Request) => req.payload
+    }
+  });
+
   await server.start();
   console.log(`Listening on port ${port}.`);
 }
+
+async function shutdown() {
+  console.log('Gracefully shutting down...');
+  await server.stop();
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
 
 start();
