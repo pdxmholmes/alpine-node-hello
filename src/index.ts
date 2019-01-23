@@ -122,6 +122,18 @@ async function start() {
 
   server.route({
     method: 'GET',
+    path: '/headers',
+    options: {
+      description: 'Echo back any headers sent to the route',
+      tags: ['api'],
+      handler: (request: Hapi.Request) => {
+        return request.headers;
+      }
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/status',
     options: {
       description: 'Simple status route that returns a 200 (OK)',

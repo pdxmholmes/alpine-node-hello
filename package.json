@@ -1,6 +1,6 @@
 {
   "name": "alpine-node-hello",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "A simple Hapi Hello World REST API example using Docker and Node Alpine. Great for quick Docker testing, builds, etc.",
   "main": "dist/index.js",
   "repository": {
